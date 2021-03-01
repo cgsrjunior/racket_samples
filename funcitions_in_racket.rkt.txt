@@ -1,0 +1,57 @@
+(define (contas_pagas salario agua luz internet)
+  (cond
+    [(>= salario (+ agua (+ luz internet))) "3 conta paga"]
+    [else
+     (cond
+       [(>= (- salario (retorna_soma_menores agua luz internet)) 0) "2 conta paga"]
+       [(>= (- salario (min agua luz internet)) 0) "1 conta paga"]
+       [else "0 conta paga"]
+     )
+    ]
+  )
+)
+
+(define (retorna_soma_menores valor1 valor2 valor3)
+  (cond
+    [(= (max valor1 valor2 valor3) valor1) (+ valor2 valor3)]
+    [(= (max valor1 valor2 valor3) valor2) (+ valor1 valor3)]
+    [(= (max valor1 valor2 valor3) valor3) (+ valor1 valor2)]
+    [else 0]
+  )
+)
+
+(define (max_tres val1 val2 val3)
+  (cond
+    [(and (>= val1 val2) (>= val1 val3)) val1]
+    [(and (>= val2 val1) (>= val2 val3)) val2]
+    [(and (>= val3 val2) (>= val3 val1)) val3]
+    [else "error"]
+  )
+)
+
+;Retorna a quantidade de acoes compradas ou vendidas
+(define (opera_na_bolsa val_abertura val_atual qtd_acoes valor_invest)
+  (cond
+    [(<= (variacao_acao val_abertura val_atual) 0.1) "Faz nada"]
+    [(and (>= (variacao_acao val_abertura val_atual) 0.1) (< (variacao_acao val_abertura val_atual) 1)) (compra_x_acoes valor_invest (variacao_acao val_abertura val_atual) )]
+    [(> (variacao_acao val_abertura val_atual) 1) "Vende todas as acoes vagabundo"]
+    [(>= (variacao_acao val_abertura val_atual) -0.2) "Faz nada"]
+    [(< (variacao_acao val_abertura val_atual) -0.2) (vende_y_acoes qtd_acoes (variacao_acao val_abertura val_atual))]
+  )
+)
+
+(define (compra_x_acoes val_investimento porc_acao)
+  (string-append "Comprado"(number->string (round (* val_investimento porc_acao))) "Acoes")
+)
+
+(define (vende_y_acoes qtd_acoes porc_acao)
+  (string-append "Vendido"(number->string (* qtd_acoes porc_acao)) "Acoes")
+)
+
+
+(define (variacao_acao val_abertura val_atual)
+  (cond
+    [(>= val_abertura val_atual) (/ (- val_abertura val_atual) val_abertura)]
+    [else (/ (- val_atual val_abertura) val_atual)]
+  )
+)
